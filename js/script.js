@@ -60,6 +60,16 @@ inputFullName.addEventListener("change", function() {
 )
 
 // required Length
+var lengthBetween = function(selector, minLength, maxLength) {
+    if(minLength && selector.value.trim().length < minLength) {
+        return false;
+    }
+    if(maxLength && selector.value.trim().length > maxLength) {
+        return false;
+    }
+    return true;
+}
+
 function requiredLength(selector, filed, maxLength) {
   if (selector.value.trim().length > maxLength) {
     return validation(
