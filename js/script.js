@@ -12,7 +12,7 @@ const resultBirthday = document.querySelector(".birthday");
 const btnUpload = document.querySelector("#btn-upload");
 const imgPreview = document.querySelector(".img-preview");
 const btnReset = document.querySelector(".btn-reset");
-const regexFullname = (/^[a-z,',-]+(\s)[a-z,',-]+$/i);
+const regexFullname = /^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,}$/
 const regexEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const regexPhone = /^[0][0-9]{2}-[0-9]{3}-[0-9]{4}/;
 
@@ -38,6 +38,7 @@ function validation(selector, textError = "") {
   } else {
     selector.classList.add("is-valid");
     selector.classList.remove("is-invalid");
+    selector.nextElementSibling.textContent = '';
   }
 }
 // chữ Hoa
@@ -70,32 +71,8 @@ var lengthBetween = function(selector, minLength, maxLength) {
     return true;
 }
 
-function requiredLength(selector, filed, maxLength) {
-  if (selector.value.trim().length > maxLength) {
-    return validation(
-      selector,
-      `Tối đa ${maxLength} kí tự`
-    );
-  } else {
-    validation(selector);
-  }
-  if (!selector.value) {
-    selector.classList.remove("is-valid");
-    selector.classList.remove("is-invalid");
-    
-    return;
-  }
-}
-
-//fullname
-inputFullName.addEventListener("input", function () {
-    requiredLength(inputFullName, "Full name", 30);
-  }
-);
-
-
 inputFullName.addEventListener("input", function() {
-  if(inputFullName.value.trim().length > 50){
+  if(!lengthBetween(inputFullName, 0, 50)){
     validation(inputFullName, "Tối đa 50 kí tự");
   } else if(!regexFullname.test(inputFullName.value.trim())){
     validation(inputFullName, "Tên không hợp lệ");
@@ -110,7 +87,7 @@ inputFullName.addEventListener("input", function() {
 
 //email
 inputEmail.addEventListener("input", function () {
-    if (inputEmail.value.trim().length > 50) {
+    if (!lengthBetween(inputEmail, 0, 50)) {
       validation(inputEmail, "Tối đa 50 kí tự");
     } else if (!regexEmail.test(inputEmail.value.trim())) {
       validation(inputEmail, "Email không hợp lệ");
@@ -125,7 +102,7 @@ inputEmail.addEventListener("input", function () {
 
 //phone
   inputPhone.addEventListener("input", function () {
-    if (inputPhone.value.trim().length > 12) {
+    if (!lengthBetween(inputPhone, 0, 12)) {
       validation(inputPhone, "Tối đa 10 chữ số");
     } else if (!regexPhone.test(inputPhone.value.trim())) {
       validation(
@@ -155,15 +132,12 @@ inputBirthday.addEventListener("input", function () {
 
 //password
 inputPassword.addEventListener("input", function () {
-  if (
-    inputPassword.value.trim().length > 7 &&
-    inputPassword.value.trim().length <= 30
-  ) {
+  if (lengthBetween(inputPassword, 7, 30)) {
     // Bắt đầu bằng chữ
-    if (!/^[a-zA-Z]{1}/.test(inputPassword.value.trim())) {
+    if (!/^[A-Z]{1}/.test(inputPassword.value.trim())) {
       return validation(
         inputPassword,
-        "Password must start with letter"
+        "Chữ cái đầu tiên phải viết hoa"
       );
     } else {
       validation(inputPassword);
@@ -221,11 +195,9 @@ inputRePassword.addEventListener("input", function () {
 // upload ảnh
 btnUpload.addEventListener("change", function (e) {
     const [file] = btnUpload.files;
-    const iconUploadPreview = document.querySelector(".icon-upload-preview");
     if (file) {
       imgPreview.style.display = "block";
       imgPreview.src = URL.createObjectURL(file);
-      iconUploadPreview.style.display = "none";
     }
   }
 );
@@ -263,7 +235,7 @@ function submitForm(e) {
     .split("-")
     .reverse()
     .join("/");
-  imgAdded.src = imgPreview.src;  
+  imgAdded.src = imgPreview.src;
   imgPreview.style.display='none';  
 }
 
