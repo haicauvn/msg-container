@@ -145,10 +145,14 @@ btnAdd.addEventListener('click', function() {
 
 // Checked on all item
 var checkall = document.querySelector('#check-all')
-checkall.onclick = function () {
+checkall.onclick = function (event) {
     var checklist = document.querySelectorAll('th > input')
     checklist.forEach(input => {
-        input.checked = true;
+        if(event.target.checked === true) {
+            input.checked = true;
+        } else {
+            input.checked = false;
+        }
     })
 }
 
