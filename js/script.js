@@ -19,9 +19,9 @@ var initPersonRender = personData.map(person => {
         <th scope="row">
             <input type="checkbox" name="" id="">
         </th>
-        <td class="col">${person.name}</td>
-        <td class="col">${person.phone}</td>
-        <td class="col">${person.email}</td>
+        <td class="col person-name">${person.name}</td>
+        <td class="col person-phone">${person.phone}</td>
+        <td class="col person-email">${person.email}</td>
         <td class="col"><button type="button" onclick="deleteAction(event)" class="btn btn-danger delete-action">Delete</button></td>
     </tr>`
 })
@@ -44,6 +44,78 @@ var addEditEvents = function() {
 }
 addEditEvents();
 
+// Validation
+
+var namePattern = '^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$';
+var phonePattern = '^[0-9]{10}$';
+var emailPattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        
+var enableValidator = function() {
+    let names = document.querySelectorAll('.person-name');
+    names.forEach(e => {
+        e.addEventListener('focusout', function(event) {
+            if(!event.target.innerText.trim().match(namePattern)) {
+                event.target.classList.add('invalid')
+            } else {
+                event.target.classList.remove('invalid')
+            }
+        })
+    })
+
+    let phones = document.querySelectorAll('.person-phone');
+    phones.forEach(e => {
+        e.addEventListener('focusout', function(event) {
+            if(!event.target.innerText.trim().match(phonePattern)) {
+                event.target.classList.add('invalid')
+            } else {
+                event.target.classList.remove('invalid')
+            }
+        })
+    })
+
+    let emails = document.querySelectorAll('.person-email');
+    emails.forEach(e => {
+        e.addEventListener('focusout', function(event) {
+            if(!event.target.innerText.trim().match(emailPattern)) {
+                event.target.classList.add('invalid')
+            } else {
+                event.target.classList.remove('invalid')
+            }
+        })
+    })
+}
+enableValidator();
+var checkValidate = function() {
+    let names = document.querySelectorAll('.person-name');
+    names.forEach(e => {
+        if(!e.innerText.trim().match(namePattern)) {
+            e.classList.add('invalid');
+        } else {
+            e.classList.remove('invalid')
+        }
+    })
+    
+    let phones = document.querySelectorAll('.person-phone');
+    phones.forEach(e => {
+        if(!e.innerText.trim().match(phonePattern)) {
+            e.classList.add('invalid');
+        } else {
+            e.classList.remove('invalid')
+        }
+    })
+
+    let emails = document.querySelectorAll('.person-email');
+    emails.forEach(e => {
+        if(!e.innerText.trim().match(emailPattern)) {
+            e.classList.add('invalid');
+        } else {
+            e.classList.remove('invalid')
+        }
+    })
+
+
+}
+
 // Button delete on action column
 var deleteAction = function(event) {
     event.target.parentElement.parentElement.remove();
@@ -52,24 +124,29 @@ var deleteAction = function(event) {
 // Button Add
 var btnAdd = document.querySelector('#add-btn');
 btnAdd.addEventListener('click', function() {
+    checkValidate();
+    if(document.querySelector('.invalid')) {
+        return;
+    }
     var e = document.createElement('tr');
     e.innerHTML = `
         <th scope="row">
             <input type="checkbox" name="" id="">
         </th>
-        <td class="col"></td>
-        <td class="col"></td>
-        <td class="col"></td>
+        <td class="col person-name"></td>
+        <td class="col person-phone"></td>
+        <td class="col person-email"></td>
         <td class="col"><button type="button" onclick="deleteAction(event)" class="btn btn-danger delete-action">Delete</button></td>
     `;
     dataBody.appendChild(e);
     addEditEvents();
+    enableValidator();
 })
 
 // Checked on all item
 var checkall = document.querySelector('#check-all')
 checkall.onclick = function () {
-    var checklist = document.querySelectorAll('input')
+    var checklist = document.querySelectorAll('th > input')
     checklist.forEach(input => {
         input.checked = true;
     })
@@ -85,3 +162,5 @@ deleteBtn.onclick = function() {
         }
     })
 }
+
+
